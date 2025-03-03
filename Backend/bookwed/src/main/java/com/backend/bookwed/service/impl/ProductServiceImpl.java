@@ -243,8 +243,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getAllProducts() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAllProducts'");
+    public List<ProductDTO> getAllProducts() {
+        List<Product> products = productRepo.findAll();
+        return products.stream()
+            .map(product -> modelMapper.map(product, ProductDTO.class))
+            .collect(Collectors.toList());
     }
 
     @Override

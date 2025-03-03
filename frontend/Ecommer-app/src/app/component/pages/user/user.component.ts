@@ -33,6 +33,8 @@ export class UserComponent implements OnInit {
   }
 
   async logout() {
-      this.router.navigate(['/login']);
-  }
+    this.authService.logout(); 
+    localStorage.removeItem('jwt-token');
+    localStorage.removeItem('username');
+    this.router.navigate(['/login']);  }
 }

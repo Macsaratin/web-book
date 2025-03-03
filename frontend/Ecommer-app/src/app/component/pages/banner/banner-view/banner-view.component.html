@@ -1,0 +1,57 @@
+<div class="banner-container">
+  <h2>Quản Lý Banner</h2>
+
+  <div class="table-container">
+    <div class="button-container">
+
+      <button mat-raised-button color="primary" routerLink="/banner/trash">Thùng rác</button>
+      <button mat-raised-button color="primary" routerLink="/banner/create">Thêm</button>
+      
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ID</th>
+          <th>Tên Banner</th>
+          <th>Hình ảnh</th>
+          <th>Trạng thái</th>
+          <th>Chức năng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let banner of banner | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }; let i = index">
+          <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+          <td>{{ banner.bannerId }}</td>
+          <td>{{ banner.bannerName }}</td>
+          <td>
+            <img *ngIf="banner.image" [src]="getImageUrl(banner.image)" [alt]="banner.bannerName" width="60" height="auto" />
+          </td>
+          <td>
+            <p (click)="statusBanner(banner.bannerId)">
+              <fa-icon
+                [icon]="banner.status === 1 ?  faToggleOn : faToggleOff"
+                [ngClass]="banner.status === 1 ? 'text-green' : 'text-red'">
+              </fa-icon>
+            </p>
+          </td>
+          <td>
+            <div class="button-group">
+              <button (click)="moveToTrash(banner.bannerId)">Xóa</button>
+              <button mat-raised-button color="primary" [routerLink]="['/banner/edit', banner.bannerId]">Sửa</button>
+            </div>
+          </td>              
+          
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Phân trang -->
+    <pagination-controls 
+      (pageChange)="currentPage = $event" 
+      previousLabel="Trước" nextLabel="Tiếp"
+      class="pagination">
+    </pagination-controls>
+  </div>
+</div>

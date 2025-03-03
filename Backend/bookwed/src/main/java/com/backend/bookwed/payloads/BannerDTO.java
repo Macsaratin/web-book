@@ -12,4 +12,6 @@ public class BannerDTO {
     private Long bannerId;
     private String bannerName;
     private String image;
+    private Integer status;
+
 }

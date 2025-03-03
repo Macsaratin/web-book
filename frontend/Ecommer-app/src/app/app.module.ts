@@ -7,9 +7,8 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './component/pages/dashboard-view/dashboard-view.component';
 import { CategoryViewComponent } from './component/pages/category-view/category-view.component';
-import { BannerViewComponent } from './component/pages/banner-view/banner-view.component';
-import { BannerPostComponent } from './component/pages/banner-post/banner-post.component';
-import { ProductViewComponent } from './component/pages/product-view/product-view.component';
+import { BannerViewComponent } from './component/pages/banner/banner-view/banner-view.component';
+import { BannerPostComponent } from './component/pages/banner/banner-post/banner-post.component';
 import { LoginComponent } from './component/pages/login/login.component';
 import { UserComponent } from './component/pages/user/user.component';
 import { UserListComponent } from './component/pages/user/user-list/user-list.component';
@@ -18,6 +17,10 @@ import { LayoutComponent } from './component/pages/layout/layout.component';
 import { UserEditComponent } from './component/pages/user/user-edit/user-edit.component';
 import { RegisterComponent } from './component/pages/register/register.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ProductListComponent } from './component/pages/product/productlist/productlist.component';
+import { BannerEditComponent } from './component/pages/banner/banner-edit/banner-edit.component';
+import { BannerTrashComponent } from './component/pages/banner/banner-trash/banner-trash.component';
 
 @NgModule({
   declarations: [
@@ -25,15 +28,17 @@ import { NgxPaginationModule } from 'ngx-pagination';
     DashboardComponent,
     CategoryViewComponent,
     BannerViewComponent,
-    ProductViewComponent,
     LoginComponent,
     UserComponent,
     BannerPostComponent,
     UserListComponent,
+    ProductListComponent,
 
     LayoutComponent,
-     UserEditComponent,
-     RegisterComponent,
+    UserEditComponent,
+    RegisterComponent,
+    BannerEditComponent,
+    BannerTrashComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +46,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ReactiveFormsModule,
     FormsModule,
     NgxPaginationModule,
-    HttpClientModule 
+    HttpClientModule ,
+    FontAwesomeModule 
   ],
   providers: [], 
   bootstrap: [AppComponent]

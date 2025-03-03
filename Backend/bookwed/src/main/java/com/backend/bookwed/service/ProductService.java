@@ -2,6 +2,7 @@ package com.backend.bookwed.service;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 import com.backend.bookwed.entity.Product;
@@ -13,7 +14,8 @@ public interface ProductService {
 
     // ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
-    ProductResponse getAllProducts();
+    // ProductResponse getAllProducts();
+    List<ProductDTO> getAllProducts();
 
     //   List<ProductDTO> getAllProductssWithoutPagination();
 

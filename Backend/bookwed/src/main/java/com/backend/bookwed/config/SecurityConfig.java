@@ -43,10 +43,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(AppConstants.PUBLIC_URLS).permitAll()
-                        .requestMatchers(AppConstants.USER_URLS).hasAnyAuthority("USER", "ADMIN")
-                        .requestMatchers(AppConstants.ADMIN_URLS).hasAuthority("ADMIN")
-                        .anyRequest().authenticated())
+                            .requestMatchers("/api/public/images/**").permitAll()
+                            .requestMatchers(AppConstants.PUBLIC_URLS).permitAll()
+                            .requestMatchers(AppConstants.USER_URLS).hasAnyAuthority("USER", "ADMIN")
+                            .requestMatchers(AppConstants.ADMIN_URLS).hasAuthority("ADMIN")
+                            .anyRequest().authenticated())
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(
                         (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                                 "Unauthorized")))

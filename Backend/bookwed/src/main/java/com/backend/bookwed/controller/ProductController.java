@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 // import java.util.List;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -26,7 +27,6 @@ import com.backend.bookwed.config.AppConstants;
 import com.backend.bookwed.entity.Product;
 import com.backend.bookwed.payloads.ProductDTO;
 import com.backend.bookwed.payloads.ProductResponse;
-// import com.backend.bookwed.payloads.UserDTO;
 import com.backend.bookwed.service.ProductService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -58,12 +58,13 @@ public class ProductController {
     //     return ResponseEntity.ok(products);
     // }
     
-    @GetMapping("/admin/products")
-    public ResponseEntity<ProductResponse> getAllProducts() {
-    ProductResponse products = productService.getAllProducts();
-    return ResponseEntity.ok(products);
-}
 
+
+    @GetMapping("/admin/products")
+    public ResponseEntity<List<ProductDTO>>  getAllProducts() {
+        List<ProductDTO> products = productService.getAllProducts();
+        return ResponseEntity.ok(products); 
+       }
     // @GetMapping("/public/products")
     // public ResponseEntity<ProductResponse> getAllProducts(
     //         @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
@@ -116,13 +117,12 @@ public class ProductController {
         return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.OK);
     }
 
-   @GetMapping("/public/products/image/{fileName}")
+   @GetMapping("/public/images/products/{fileName}")
     public ResponseEntity<InputStreamResource> getImage(@PathVariable String fileName) throws FileNotFoundException {
         InputStream imageStream = productService.getProductImage(fileName);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
         headers.setContentDispositionFormData("inline", fileName);
-
         return new ResponseEntity<>(new InputStreamResource(imageStream), headers, HttpStatus.OK);
     }
 

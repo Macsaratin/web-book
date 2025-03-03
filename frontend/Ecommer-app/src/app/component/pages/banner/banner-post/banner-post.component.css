@@ -1,0 +1,62 @@
+.form-container {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  color: #4a5568;
+  
+}
+
+.max-w-md {
+  width: 100%;
+  max-width: 400px; /* Giới hạn chiều rộng form */
+}
+
+button {
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2563eb;
+}
+
+button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.loader {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #fff;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+
+input:focus {
+  border-color: #2563eb; /* Change border color on focus */
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5); /* Add shadow effect */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .form-container {
+      padding: 15px;
+  }
+
+  .max-w-md {
+      max-width: 100%; /* Full width on smaller screens */
+  }
+}

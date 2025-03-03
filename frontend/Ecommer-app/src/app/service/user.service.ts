@@ -37,12 +37,7 @@ export class UserService {
     }
 }
 
-logout(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    // Xóa dữ liệu user và token
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    resolve();
-  });
+logout() {
+  localStorage.clear();
 }
 }

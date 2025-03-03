@@ -17,7 +17,6 @@ import com.backend.bookwed.entity.Banner;
 import com.backend.bookwed.exceptions.APIException;
 import com.backend.bookwed.exceptions.ResourceNotFoundException;
 import com.backend.bookwed.payloads.BannerDTO;
-// import com.backend.bookwed.payloads.BannerResponse;
 import com.backend.bookwed.repository.BannerRepo;
 import com.backend.bookwed.service.BannerService;
 import com.backend.bookwed.service.FileService;
@@ -39,30 +38,46 @@ public class BannerServiceImpl implements BannerService {
     private ModelMapper modelMapper;
 
     @Value("${project.image}/banners/")
-    private String basePath;
+    private String path;
 
     private String bannerPath;
 
     @PostConstruct
     public void init() {
-        this.bannerPath = basePath + "banners/";
+        this.bannerPath = path + "banners/";
+    }
+    @Override
+    public BannerDTO createBanner(Banner banner, MultipartFile image) throws IOException {
+            Banner existingBanner = bannerRepo.findByBannerName(banner.getBannerName());
+            
+            if (existingBanner != null) {
+                throw new APIException("Banner already exists !!!");
+            }
+            if (banner.getStatus() == null) {
+                banner.setStatus(1);
+            }
+
+            // Kiểm tra xem có ảnh tải lên không
+            if (image != null && !image.isEmpty()) {
+                String imageUrl = saveImage(image); // Lưu ảnh & lấy URL
+                banner.setImage(imageUrl);
+            } else {
+                banner.setImage("default.png"); // Ảnh mặc định nếu không có ảnh
+            }
+
+            Banner savedBanner = bannerRepo.save(banner);
+            
+            return modelMapper.map(savedBanner, BannerDTO.class);
     }
 
     @Override
-    public BannerDTO createBanner(Banner banner) {
-        Banner existingBanner = bannerRepo.findByBannerName(banner.getBannerName());
-    
-        if (existingBanner != null) {
-            throw new APIException("Banner already exists !!!");
-        }
-
-        // Gán ảnh mặc định nếu chưa có ảnh
-        banner.setImage("default.png");
-        Banner savedBanner = bannerRepo.save(banner);
-        
-        return modelMapper.map(savedBanner, BannerDTO.class);
+    public List<BannerDTO> getTrash() {
+        List<Banner> banners = bannerRepo.findByStatus(2); // Fetch banners with status 2
+        return banners.stream()
+            .map(banner -> modelMapper.map(banner, BannerDTO.class))
+            .collect(Collectors.toList());
     }
-    
+
     @Override
     public List<BannerDTO> getBannerAll() {
         List<Banner> banners = bannerRepo.findAll();
@@ -70,25 +85,49 @@ public class BannerServiceImpl implements BannerService {
             .map(banner -> modelMapper.map(banner, BannerDTO.class))
             .collect(Collectors.toList());
     }
-    
 
+
+    @Override
+    public void updateBannerStatus(Long id, Integer status) {
+        Banner banner = bannerRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Banner", "ID", id));
+
+        banner.setStatus(status);
+        bannerRepo.save(banner);
+    }
     @Override
     public BannerDTO getBannerById(Long bannerId) {
         Banner banner = bannerRepo.findById(bannerId).orElseThrow(() -> new ResourceNotFoundException("Banner", "bannerId", bannerId));
         return modelMapper.map(banner, BannerDTO.class);
     }
-
+// cập nhật hìh ảnh
     @Override
-    public BannerDTO updateBanner(Long bannerId, Banner bannerDetails) {
+    public BannerDTO updateBanner(Long bannerId, String bannerName, MultipartFile image, Integer status) {
         Banner existingBanner = bannerRepo.findById(bannerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Banner", "bannerId", bannerId));
 
-        existingBanner.setBannerName(bannerDetails.getBannerName());
+        if (bannerName != null && !bannerName.isEmpty()) {
+            existingBanner.setBannerName(bannerName);
+        }
+
+        if (image != null && !image.isEmpty()) {
+            try {
+                String imagePath = saveImage(image);
+                existingBanner.setImage(imagePath);
+            } catch (IOException e) {
+                throw new RuntimeException("Lỗi khi lưu hình ảnh", e);
+            }
+        }
+
+        if (status != null) {
+            existingBanner.setStatus(status);
+        }
+
         Banner updatedBanner = bannerRepo.save(existingBanner);
-        
         return modelMapper.map(updatedBanner, BannerDTO.class);
     }
 
+// xoá hình ảnh
 @Override
 public String deleteBanner(Long bannerId) {
     // Tìm banner trong cơ sở dữ liệu
@@ -131,7 +170,7 @@ public String deleteBanner(Long bannerId) {
             throw new APIException("Banner not found with bannerId: " + bannerId);
         }
     
-        String fileName = fileService.uploadImage(basePath, image);
+        String fileName = fileService.uploadImage(path, image);
     
         bannerFromDB.setImage(fileName);
     
@@ -139,10 +178,22 @@ public String deleteBanner(Long bannerId) {
     
         return modelMapper.map(updatedBanner, BannerDTO.class);
     }
-    
 
     @Override
     public InputStream getBannerImage(String fileName) throws FileNotFoundException {
-        return fileService.getResource(bannerPath, fileName); 
-   }
+        return fileService.getResource(path, fileName);
+    }
+
+    @Override
+    public String saveImage(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new APIException("File ảnh không được để trống!");
+        }
+            String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new APIException("Chỉ được phép tải lên file ảnh (JPG, PNG, JPEG, GIF)!");
+        }
+            return fileService.uploadImage(path, file);
+    }
+    
 }

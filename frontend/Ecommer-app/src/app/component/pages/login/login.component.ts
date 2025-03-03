@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../../service/auth.service';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-login',
@@ -16,16 +17,18 @@ export class LoginComponent implements OnInit {
   @ViewChild('signIn') signInButton!: ElementRef;
   @ViewChild('container') container!: ElementRef;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    setTimeout(() => {
-      if (this.signInButton && this.container) {
-        this.signInButton.nativeElement.addEventListener('click', () => {
-          this.container.nativeElement.classList.remove('right-panel-active');
-        });
-      }
-    }, 0);
+    if (this.route.snapshot.queryParams['user'] || this.route.snapshot.queryParams['password']) {
+      this.router.navigate(['/login']);
+    }
+
+    this.errorMessage = ''; // Reset lỗi trước khi đăng nhập
+    this.successMessage = ''; // Reset thông báo thành công
   }
 
   async onLogin() {

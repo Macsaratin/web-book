@@ -1,6 +1,6 @@
 .banner-container {
     max-width: 900px;
-    margin: 20px auto;
+    margin:  auto;
     padding: 20px;
     background: white;
     border-radius: 8px;
@@ -12,6 +12,7 @@
     display: flex;
     justify-content: flex-end;
     margin-bottom: 10px;
+    gap: 3px;
   }
   
 h2 {
@@ -39,6 +40,12 @@ th, td {
 th {
     background-color: #edf2f7;
 }
+.button-group {
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+}
+
 
 button {
     background-color: #e53e3e;
@@ -51,3 +58,14 @@ button {
 button:hover {
     background-color: #c53030;
 }
+button {
+    cursor: pointer;
+  }
+
+.text-green {
+    color: green;
+  }
+  
+.text-red {
+    color: red;
+  }

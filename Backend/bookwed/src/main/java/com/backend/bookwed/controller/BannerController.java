@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,16 +40,38 @@ public class BannerController {
     @Autowired
     private BannerService bannerService;
 
+    // @PostMapping("/admin/banner")
+    // public ResponseEntity<BannerDTO> createBanner(@Valid @RequestBody Banner banner) {
+    //     BannerDTO savedBannerDTO = bannerService.createBanner(banner);
+    //     return new ResponseEntity<>(savedBannerDTO, HttpStatus.CREATED);
+    // }
+
     @PostMapping("/admin/banner")
-    public ResponseEntity<BannerDTO> createBanner(@Valid @RequestBody Banner banner) {
-        BannerDTO savedBannerDTO = bannerService.createBanner(banner);
+    public ResponseEntity<BannerDTO> createBanner(
+            @RequestParam("bannerName") String bannerName,
+            @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
+    
+        Banner banner = new Banner();
+        banner.setBannerName(bannerName);
+    
+        BannerDTO savedBannerDTO = bannerService.createBanner(banner, image);
         return new ResponseEntity<>(savedBannerDTO, HttpStatus.CREATED);
     }
+    
 
     @GetMapping("/admin/banner")
     public ResponseEntity<List<BannerDTO>> getbanner() {
-         List<BannerDTO> banner = bannerService.getBannerAll();
+        List<BannerDTO> banner = bannerService.getBannerAll();
         return ResponseEntity.ok(banner);
+    }
+
+    
+    @PutMapping("/admin/update-status")
+    public ResponseEntity<String> updateBannerStatus(@RequestBody Map<String, Object> requestData) {
+        Long id = ((Number) requestData.get("id")).longValue();
+        Integer status = (Integer) requestData.get("status"); 
+        bannerService.updateBannerStatus(id, status);
+        return ResponseEntity.ok("Cập nhật trạng thái banner thành công!");
     }
 
 
@@ -58,10 +82,16 @@ public class BannerController {
     }
 
     @PutMapping("/admin/banner/{bannerId}")
-    public ResponseEntity<BannerDTO> updateBanner(@PathVariable Long bannerId, @RequestBody Banner banner) {
-        BannerDTO bannerDTO = bannerService.updateBanner(bannerId, banner);
+    public ResponseEntity<BannerDTO> updateBanner(
+            @PathVariable Long bannerId, 
+            @RequestParam(value = "bannerName", required = false) String bannerName,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam(value = "status", required = false) Integer status) {
+    
+        BannerDTO bannerDTO = bannerService.updateBanner(bannerId, bannerName, image, status);
         return new ResponseEntity<>(bannerDTO, HttpStatus.OK);
     }
+    
 
     @DeleteMapping("/admin/banner/{bannerId}")
     public ResponseEntity<String> deleteBanner(@PathVariable Long bannerId) {
@@ -77,16 +107,15 @@ public class BannerController {
             return new ResponseEntity<>(updatedBanner, HttpStatus.OK);
     }
 
-
-    @GetMapping("/public/banners/image/{fileName}")
-    public ResponseEntity<InputStreamResource> getBannerImage(@PathVariable String fileName) throws FileNotFoundException {
-        InputStream imageStream = bannerService.getBannerImage(fileName);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-        headers.setContentDispositionFormData("inline", fileName);
-
-        return new ResponseEntity<>(new InputStreamResource(imageStream), headers, HttpStatus.OK);
-    }
+    
+   @GetMapping("/public/images/banners/{fileName}")
+   public ResponseEntity<InputStreamResource> getImage(@PathVariable String fileName) throws FileNotFoundException {
+       InputStream imageStream = bannerService.getBannerImage(fileName);
+       HttpHeaders headers = new HttpHeaders();
+       headers.setContentType(MediaType.IMAGE_PNG);
+       headers.setContentDispositionFormData("inline", fileName);
+       return new ResponseEntity<>(new InputStreamResource(imageStream), headers, HttpStatus.OK);
+   }
 
 
 

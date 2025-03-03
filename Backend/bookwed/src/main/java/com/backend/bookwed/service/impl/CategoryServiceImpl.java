@@ -11,12 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.backend.bookwed.entity.Banner;
 import com.backend.bookwed.entity.Category;
 import com.backend.bookwed.entity.Product;
 import com.backend.bookwed.exceptions.APIException;
 import com.backend.bookwed.exceptions.ResourceNotFoundException;
-import com.backend.bookwed.payloads.BannerDTO;
 import com.backend.bookwed.payloads.CategoryDTO;
 import com.backend.bookwed.payloads.CategoryResponse;
 import com.backend.bookwed.repository.CategoryRepo;
