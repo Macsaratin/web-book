@@ -66,17 +66,33 @@ public class CategoryController {
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/admin/categories/{categoryId}")
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long categoryId) {
+        CategoryDTO categoryDTO = categoryService.getCategoryById(categoryId);
+        return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
+    }
+
+
     @GetMapping("/public/categories/{categoryId}")
     public ResponseEntity<CategoryDTO> getOneCategory(@PathVariable Long categoryId) {
         CategoryDTO categoryDTO = categoryService.getCategoryById(categoryId);
         return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
     }
 
+    // @PutMapping("/admin/categories/{categoryId}")
+    // public ResponseEntity<CategoryDTO> updateCategory(@RequestBody Category categoryName, @PathVariable Long categoryId) {
+    //     CategoryDTO categoryDTO = categoryService.updateCategory(categoryName, categoryId);
+    //     return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
+    // }
     @PutMapping("/admin/categories/{categoryId}")
-    public ResponseEntity<CategoryDTO> updateCategory(@RequestBody Category category, @PathVariable Long categoryId) {
+    public ResponseEntity<CategoryDTO> updateCategory(
+        @RequestBody Category category, 
+        @PathVariable Long categoryId
+    ) {
         CategoryDTO categoryDTO = categoryService.updateCategory(category, categoryId);
         return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
     }
+
     
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {

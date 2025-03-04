@@ -31,11 +31,10 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {}
 
   async onRegister() {
-    console.log('Dữ liệu gửi đi:', this.user); // Log kiểm tra dữ liệu gửi lên API
+    // console.log('Dữ liệu gửi đi:', this.user);
     try {
       const response = await this.authService.register(this.user);
       console.log('Phản hồi từ API:', response);
-      
       this.successMessage = 'Đăng ký thành công! Đang chuyển hướng...';
       this.errorMessage = '';
 

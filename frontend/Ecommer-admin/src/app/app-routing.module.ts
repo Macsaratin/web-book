@@ -11,13 +11,15 @@ import { AuthGuard } from './service/auth.guard';
 import { UserListComponent } from './component/pages/user/user-list/user-list.component';
 import { UserEditComponent } from './component/pages/user/user-edit/user-edit.component';
 import { RegisterComponent } from './component/pages/register/register.component';
-import { CategoryViewComponent } from './component/pages/category-view/category-view.component';
+import { CategoryViewComponent } from './component/pages/category/category-view/category-view.component';
 import { BannerPostComponent } from './component/pages/banner/banner-post/banner-post.component';
 
 import { AlreadyAuthGuard } from './service/already-auth-guard.service';
 import { ProductListComponent } from './component/pages/product/productlist/productlist.component';
 import { BannerEditComponent } from './component/pages/banner/banner-edit/banner-edit.component';
 import { BannerTrashComponent } from './component/pages/banner/banner-trash/banner-trash.component';
+import { CategoryCreateComponent } from './component/pages/category/category-create/category-create.component';
+import { CategoryEditComponent } from './component/pages/category/category-edit/category-edit.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'admin/dashboard', pathMatch: 'full' },
@@ -29,7 +31,12 @@ const routes: Routes = [
     canActivate: [AuthGuard], // Kiểm tra đăng nhập trước khi vào layout
     children: [
       { path: 'dashboard', component: DashboardComponent },
+      //category
       {path: 'category', component :CategoryViewComponent},
+      {path: 'category/create', component :CategoryCreateComponent},
+      {path: 'category/edit/:id', component :CategoryEditComponent},
+
+
 
       //banner 
       { 

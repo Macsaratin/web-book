@@ -1,0 +1,21 @@
+<div class="form-container">
+    <div class="max-w-md bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold mb-4 text-center">Thêm Category</h2>
+  
+        <form [formGroup]="categoryform" (ngSubmit)="submitForm()">
+            <div class="mb-4">
+                <label class="block font-medium m-2">Category Name:</label>
+                <input type="text" formControlName="categoryName" class=" w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+  
+            <button 
+                type="submit" 
+                class="bg-blue-500 text-white px-4 py-2 rounded w-full transition duration-300 ease-in-out hover:bg-blue-700 flex items-center justify-center"
+                [disabled]="categoryform.invalid || loading">
+                <span *ngIf="!loading">Thêm category</span>
+                <span *ngIf="loading" class="loader"></span>
+            </button>
+        </form>
+    </div>
+  </div>

@@ -29,8 +29,6 @@ import com.backend.bookwed.payloads.BannerDTO;
 import com.backend.bookwed.service.BannerService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
-
 
 @RestController
 @RequestMapping("/api")
@@ -40,11 +38,6 @@ public class BannerController {
     @Autowired
     private BannerService bannerService;
 
-    // @PostMapping("/admin/banner")
-    // public ResponseEntity<BannerDTO> createBanner(@Valid @RequestBody Banner banner) {
-    //     BannerDTO savedBannerDTO = bannerService.createBanner(banner);
-    //     return new ResponseEntity<>(savedBannerDTO, HttpStatus.CREATED);
-    // }
 
     @PostMapping("/admin/banner")
     public ResponseEntity<BannerDTO> createBanner(

@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.bookwed.entity.Banner;
 import com.backend.bookwed.payloads.BannerDTO;
-// import com.backend.bookwed.payloads.BannerResponse;
 
 import jakarta.transaction.Transactional;
 

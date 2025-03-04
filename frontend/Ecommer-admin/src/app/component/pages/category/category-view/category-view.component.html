@@ -1,0 +1,53 @@
+<div class="banner-container">
+    <h2 >Quản Lý Danh Mục</h2>
+    <div class="table-container">
+        <div class="button-container">
+            <button mat-raised-button class="btn-danger" routerLink="/category/trash">Thùng rác</button>
+            <button mat-raised-button class="btn-success" routerLink="/category/create">Thêm</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ID</th>
+                    <th>Tên category</th>
+                    <th>Trạng thái</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let category of category; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ category.categoryId }}</td>
+                    <td>{{ category.categoryName }}</td>
+                    <td>Trạng thái</td> 
+                    <!-- <td>
+                        <p (click)="statusBanner(category.categoryId)">
+                            <fa-icon
+                                [icon]="category.status === 1 ? faToggleOn : faToggleOff"
+                                [ngClass]="category.status === 1 ? 'text-green' : 'text-red'">
+                            </fa-icon>
+                        </p>
+                    </td> -->
+                    
+                    <td>
+                        <div class="button-group">
+                            <button>xoá</button>
+                            <!-- <button mat-raised-button class="btn-danger" (click)="moveToTrash(category.categoryId)">Xoá</button>  -->
+                            <button mat-raised-button class="btn-success" [routerLink]="['/category/edit', category.categoryId]">Sửa</button> 
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Phân trang (uncomment when ready) -->
+        <!-- <pagination-controls 
+            (pageChange)="currentPage = $event" 
+            previousLabel="Trước" 
+            nextLabel="Tiếp"
+            class="pagination">
+        </pagination-controls> -->
+    </div>
+</div>

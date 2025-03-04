@@ -7,7 +7,7 @@ import axios from 'axios';
 export class BannerService {
   private apiUrl = 'http://localhost:8080/api';
 
-  // 🟢 Tạo mới banner (gửi ảnh và tên)
+  //  Tạo mới banner (gửi ảnh và tên)
   async createBanner(bannerName: string, imageFile: File) {
     try {
       const token = localStorage.getItem('jwt-token');
@@ -32,7 +32,7 @@ export class BannerService {
     }
   }
 
-  // 🟢 Lấy banner theo ID
+  // Lấy banner theo ID
   async getBannerById(id: number) {
     try {
       const token = localStorage.getItem('jwt-token'); 
