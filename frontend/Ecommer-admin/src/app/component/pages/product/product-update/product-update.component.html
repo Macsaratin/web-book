@@ -1,0 +1,86 @@
+<div class="container mx-auto p-6">
+    <h2 class="text-2xl font-bold mb-4">Cập nhật sản phẩm</h2>
+  
+    <form [formGroup]="updateProductForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="space-y-4">
+  
+      <!-- Chọn danh mục -->
+      <div>
+        <label class="block font-semibold">Chọn danh mục:</label>
+        <select formControlName="categoryId" class="w-full p-2 border rounded">
+          <option *ngFor="let category of category" [value]="category.categoryId">
+            {{ category.categoryName }}
+          </option>
+        </select>
+      </div>
+  
+      <!-- Tên sản phẩm -->
+      <div>
+        <label class="block font-semibold">Tên sản phẩm:</label>
+        <input formControlName="productName" type="text" class="w-full p-2 border rounded" />
+      </div>
+  
+      <!-- Mô tả -->
+      <div>
+        <label class="block font-semibold">Mô tả:</label>
+        <textarea formControlName="description" class="w-full p-2 border rounded"></textarea>
+      </div>
+  
+      <!-- Số lượng -->
+      <div>
+        <label class="block font-semibold">Số lượng:</label>
+        <input formControlName="quantity" type="number" class="w-full p-2 border rounded" />
+      </div>
+  
+      <!-- Giá -->
+      <div>
+        <label class="block font-semibold">Giá:</label>
+        <input formControlName="price" type="number" class="w-full p-2 border rounded" />
+      </div>
+  
+      <!-- Giảm giá -->
+      <div>
+        <label class="block font-semibold">Giảm giá:</label>
+        <input formControlName="discount" type="number" class="w-full p-2 border rounded" />
+      </div>
+  
+      <!-- Tình trạng sách -->
+      <div>
+        <label class="block font-semibold">Tình trạng:</label>
+        <select formControlName="bookCondition" class="w-full p-2 border rounded">
+          <option value="Mới">Mới</option>
+          <option value="Cũ">Cũ</option>
+        </select>
+      </div>
+  
+      <!-- Nhà xuất bản -->
+      <div>
+        <label class="block font-semibold">Nhà xuất bản:</label>
+        <input formControlName="publisher" type="text" class="w-full p-2 border rounded" />
+      </div>
+  
+      <!-- Ngày phát hành -->
+      <div>
+        <label class="block font-semibold">Ngày phát hành:</label>
+        <input formControlName="releaseDate" type="date" class="w-full p-2 border rounded" />
+      </div>
+        <!-- Ảnh hiện tại -->
+        <!-- <div *ngIf="currentImage">
+            <p class="font-semibold" style="color: black;">Ảnh hiện tại:</p>
+            <img [src]="currentImage" alt="Ảnh sản phẩm" class="w-32 h-32 object-cover">
+        </div> -->
+        
+        <!-- Chọn ảnh mới -->
+        <div>
+            <label class="block font-semibold">Chọn ảnh mới:</label>
+            <input type="file" (change)="onFileSelected($event)" class="w-full p-2 border rounded" />
+        </div>
+        
+  
+      <!-- Nút Cập nhật sản phẩm -->
+      <button type="submit" [disabled]="updateProductForm.invalid" class="bg-green-500 text-white px-4 py-2 rounded">
+        Cập nhật sản phẩm
+      </button>
+  
+    </form>
+  </div>
+  

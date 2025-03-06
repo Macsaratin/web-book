@@ -52,7 +52,6 @@ export class BannerService {
     }
   }
 
-  // 🟢 Lấy tất cả banner
   async getAllBanner() {
     try {
       const token = localStorage.getItem('jwt-token'); 
@@ -72,7 +71,6 @@ export class BannerService {
     }
   }
 
-  // 🟢 Cập nhật banner theo ID (tên banner)
   async updateBanner(id: number, bannerName: string, imageFile?: File | null) {
     const token = localStorage.getItem('jwt-token'); 
     if (!token) throw new Error("Không tìm thấy token!");
@@ -110,28 +108,6 @@ export class BannerService {
     }
   }
 
-  // async updateBannerStatus(id: number, status: number) {
-
-  //   try {
-  //     const token = localStorage.getItem('jwt-token'); 
-  //     if (!token) throw new Error("Không tìm thấy token!");
-
-  //     const response = await axios.put(`${this.apiUrl}/admin/banner/update-status`, 
-  //       { status }, 
-  //       {
-  //         headers: {
-  //           'Authorization': `Bearer ${token}`,
-  //           'Content-Type': 'application/json'
-  //         }
-  //       });
-
-  //     console.log(`Trạng thái banner ${id} được cập nhật thành ${status}`);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error("Lỗi khi cập nhật trạng thái banner:", error);
-  //     throw error;
-  //   }
-  // }
 
   async updateBannerStatus(id: number, status: number) {
     try {

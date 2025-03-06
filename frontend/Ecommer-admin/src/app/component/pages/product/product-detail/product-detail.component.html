@@ -1,0 +1,22 @@
+<div class="container" *ngIf="loading">Đang tải...</div>
+<div class="container" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+<div class="product-detail" *ngIf="product">
+    <img *ngIf="product.image" [src]="getImageUrl(product.image)" [alt]="product.productName" width="30%" height="auto" />
+
+  <div class="product-info">
+    <h2>{{ product.productName }}</h2>
+    <p><strong>Danh mục:</strong> {{ product.category?.categoryName || 'Không có' }}</p>
+    <p><strong>Mô tả:</strong> {{ product.description }}</p>
+    <p><strong>Giá:</strong> {{ product.price | currency }}</p>
+    <p><strong>Giá Sale:</strong> {{ product.peicesale | currency }}</p>
+
+    <p><strong>Số lượng:</strong> {{ product.quantity }}</p>
+    <p><strong>Giảm giá:</strong> {{ product.discount }}%</p>
+    <p><strong>Nhà xuất bản:</strong> {{ product.publisher }}</p>
+    <p><strong>Ngày phát hành:</strong> {{ product.releaseDate }}</p>
+    <p><strong>Tình trạng:</strong> {{ product.bookCondition }}</p>
+
+    <button mat-raised-button class="btn-success" [routerLink]="['/product']">Quay Lại</button> 
+  </div>
+</div>

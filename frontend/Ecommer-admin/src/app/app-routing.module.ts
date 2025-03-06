@@ -18,8 +18,15 @@ import { AlreadyAuthGuard } from './service/already-auth-guard.service';
 import { ProductListComponent } from './component/pages/product/productlist/productlist.component';
 import { BannerEditComponent } from './component/pages/banner/banner-edit/banner-edit.component';
 import { BannerTrashComponent } from './component/pages/banner/banner-trash/banner-trash.component';
+//
 import { CategoryCreateComponent } from './component/pages/category/category-create/category-create.component';
 import { CategoryEditComponent } from './component/pages/category/category-edit/category-edit.component';
+
+//
+import { ProductCreateComponent } from './component/pages/product/product-create/product-create.component';
+import { ProductUpdateComponent } from './component/pages/product/product-update/product-update.component';
+import { ProductDetailComponent } from './component/pages/product/product-detail/product-detail.component';
+import { ProductTrashComponent } from './component/pages/product/product-trash/product-trash.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'admin/dashboard', pathMatch: 'full' },
@@ -49,6 +56,13 @@ const routes: Routes = [
 
       //
       { path: 'product', component: ProductListComponent },
+      { path: 'product/create', component: ProductCreateComponent },
+      { path: 'product/detail/:id', component: ProductDetailComponent },
+      { path: 'product/trash', component: ProductTrashComponent },
+      { path: 'product/edit/:id', component: ProductUpdateComponent },
+      //
+
+
 
       { path: 'user-account', component: UserListComponent},
       { path: 'user-account/edit/:id', component:UserEditComponent },

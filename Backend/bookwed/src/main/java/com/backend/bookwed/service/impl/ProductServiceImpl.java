@@ -3,28 +3,22 @@ package com.backend.bookwed.service.impl;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.backend.bookwed.entity.Cart;
 import com.backend.bookwed.entity.Category;
 import com.backend.bookwed.entity.Product;
-import com.backend.bookwed.exceptions.APIException;
 import com.backend.bookwed.exceptions.ResourceNotFoundException;
-import com.backend.bookwed.payloads.CartDTO;
 import com.backend.bookwed.payloads.ProductDTO;
-import com.backend.bookwed.payloads.ProductResponse;
 import com.backend.bookwed.repository.CategoryRepo;
 import com.backend.bookwed.repository.ProductRepo;
-import com.backend.bookwed.repository.CartRepo;
-import com.backend.bookwed.service.CartService;
 import com.backend.bookwed.service.FileService;
 import com.backend.bookwed.service.ProductService;
 
@@ -35,14 +29,9 @@ import jakarta.transaction.Transactional;
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepo productRepo;
+    
     @Autowired
     private CategoryRepo categoryRepo;
-
-    @Autowired
-    private CartRepo cartRepo;
-
-    @Autowired
-    private CartService cartService;
 
     @Autowired
     private FileService fileService;
@@ -54,172 +43,94 @@ public class ProductServiceImpl implements ProductService {
     private String path;
 
     @Override
-    public ProductDTO addProduct(Long categoryId, Product product) {
+    public ProductDTO addProduct(Long categoryId, String productName, String description, Integer quantity, double price, double discount, String bookCondition, String publisher, String releaseDate, MultipartFile image) throws IOException {
         Category category = categoryRepo.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-
-        boolean isProductNotPresent = true;
-
-        List<Product> products = category.getProducts();
-
-        for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getProductName().equals(product.getProductName())
-                    && products.get(i).getDescription().equals(product.getDescription())) {
-                isProductNotPresent = false;
-                break;
-            }
+    
+        Product product = new Product();
+        product.setProductName(productName);
+        product.setDescription(description);
+        product.setQuantity(quantity);
+        product.setPrice(price);
+        product.setDiscount(discount);
+        product.setBookCondition(bookCondition);
+        product.setPublisher(publisher);
+        product.setCategory(category);
+        product.setPricesale(price - (price * discount / 100)); // Tính giá khuyến mãi
+    
+        if (releaseDate != null && !releaseDate.isEmpty()) {
+            product.setReleaseDate(LocalDate.parse(releaseDate));
         }
-
-        if (isProductNotPresent) {
-            product.setImage("default.png");
-            product.setCategory(category);
-            Product savedProduct = productRepo.save(product);
-            return modelMapper.map(savedProduct, ProductDTO.class);
+        if (image != null && !image.isEmpty()) {
+            String fileName = fileService.uploadImage(path, image);
+            product.setImage(fileName);
         } else {
-            throw new APIException("Product already exists !!!");
+            product.setImage("default.png");
         }
-    }
-
-    // @Override
-    // public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-    //     Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
-    //             : Sort.by(sortBy).descending();
-    //     Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-    //     Page<Product> pageProducts = productRepo.findAll(pageDetails);
-    //     List<Product> products = pageProducts.getContent();
-    //     List<ProductDTO> productDTOs = products.stream().map(product -> modelMapper.map(product, ProductDTO.class))
-    //             .collect(Collectors.toList());
-
-    //     ProductResponse productResponse = new ProductResponse();
-    //     productResponse.setContent(productDTOs);
-    //     productResponse.setPageNumber(pageProducts.getNumber());
-    //     productResponse.setPageSize(pageProducts.getSize());
-    //     productResponse.setTotalElements(pageProducts.getTotalElements());
-    //     productResponse.setTotalPages(pageProducts.getTotalPages());
-    //     productResponse.setLastPage(pageProducts.isLast());
-
-    //     return productResponse;
-    // }
-
-    // @Override
-    // public ProductDTO getProductById(Long productId) {
-    //     Optional<Product> productOptional = productRepo.findById(productId);
-    //     if (productOptional.isPresent()) {
-    //         Product product = productOptional.get();
-    //         return modelMapper.map(product, ProductDTO.class);
-    //     } else {
-    //         throw new ResourceNotFoundException("Product", "productId", productId);
-    //     }
-    // }
-
-    // @Override
-    // public ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,
-    //         String sortOrder) {
-    //     // Category category = categoryRepo.findById(categoryId)
-    //     // .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId",
-    //     // categoryId));
-    //     Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
-    //             : Sort.by(sortBy).descending();
-
-    //     Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-    //     Page<Product> pageProducts = productRepo.findByCategoryCategoryId(categoryId, pageDetails);
-
-    //     List<Product> products = pageProducts.getContent();
-
-    //     // if (products.isEmpty()) {
-    //     // throw new APIException(category.getCategoryName() + " category doesn't
-    //     // contain any products !!!");
-    //     // }
-
-    //     List<ProductDTO> productDTOs = products.stream()
-    //             .map(p -> modelMapper.map(p, ProductDTO.class))
-    //             .collect(Collectors.toList());
-
-    //     ProductResponse productResponse = new ProductResponse();
-    //     productResponse.setContent(productDTOs);
-    //     productResponse.setPageNumber(pageProducts.getNumber());
-    //     productResponse.setPageSize(pageProducts.getSize());
-    //     productResponse.setTotalElements(pageProducts.getTotalElements());
-    //     productResponse.setTotalPages(pageProducts.getTotalPages());
-    //     productResponse.setLastPage(pageProducts.isLast());
-
-    //     return productResponse;
-    // }
-
-    // @Override
-    // public ProductResponse searchProductByKeyword(String keyword, Long categoryId, Integer pageNumber, Integer pageSize,
-    //         String sortBy, String sortOrder) {
-    //     Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
-    //             : Sort.by(sortBy).descending();
-    //     Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-    //     Page<Product> pageProducts = productRepo.findByProductNameContaining(keyword, pageDetails);
-    //     List<Product> products = pageProducts.getContent();
-
-    //     if (products.isEmpty()) {
-    //         throw new APIException("Products not found with keyword: " + keyword);
-    //     }
-
-    //     List<ProductDTO> productDTOs = products.stream()
-    //             .map(product -> modelMapper.map(product, ProductDTO.class))
-    //             .collect(Collectors.toList());
-
-    //     ProductResponse productResponse = new ProductResponse();
-    //     productResponse.setContent(productDTOs);
-    //     productResponse.setPageNumber(pageProducts.getNumber());
-    //     productResponse.setPageSize(pageProducts.getSize());
-    //     productResponse.setTotalElements(pageProducts.getTotalElements());
-    //     productResponse.setTotalPages(pageProducts.getTotalPages());
-    //     productResponse.setLastPage(pageProducts.isLast());
-
-    //     return productResponse;
-    // }
-    // @Override
-    public ProductDTO updateProduct(Long productId, Product product) {
-        Product productFromDB = productRepo.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
-
-        if (productFromDB == null) {
-            throw new APIException("Product not found with productId: " + productId);
-        }
-
-        product.setImage(productFromDB.getImage());
-        product.setProductId(productId);
-        product.setCategory(productFromDB.getCategory());
-
+    
         Product savedProduct = productRepo.save(product);
-
-        List<Cart> carts = cartRepo.findCartsByProductId(productId);
-
-        List<CartDTO> cartDTOs = carts.stream().map(cart -> {
-            CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
-            List<ProductDTO> products = cart.getCartItems().stream()
-                    .map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
-
-            cartDTO.setProducts(products);
-
-            return cartDTO;
-        }).collect(Collectors.toList());
-
-        cartDTOs.forEach(cart -> cartService.updateProductInCarts(cart.getCartId(), productId));
-
         return modelMapper.map(savedProduct, ProductDTO.class);
     }
 
     @Override
+    public void updateProductStatus(Long productId, Integer status) {
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+    
+        product.setStatus(status);
+        productRepo.save(product);
+    }
+
+    @Override
+    public List<ProductDTO> getTrash() {
+        List<Product> products = productRepo.findByStatus(2); // Lấy sản phẩm có status = 2
+        return products.stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductDTO updateProduct(Long productId, Long categoryId, String productName, String description, 
+                                    Integer quantity, double price, double discount, String bookCondition, 
+                                    String publisher, String releaseDate, MultipartFile image) throws IOException {
+        Product existingProduct = productRepo.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+    
+        Category category = categoryRepo.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+    
+        // Cập nhật thông tin sản phẩm
+        existingProduct.setProductName(productName);
+        existingProduct.setDescription(description);
+        existingProduct.setQuantity(quantity);
+        existingProduct.setPrice(price);
+        existingProduct.setDiscount(discount);
+        existingProduct.setPricesale(price - (price * discount / 100)); 
+        existingProduct.setBookCondition(bookCondition);
+        existingProduct.setPublisher(publisher);
+        existingProduct.setCategory(category); // Cập nhật danh mục sản phẩm
+    
+        if (releaseDate != null && !releaseDate.isEmpty()) {
+            existingProduct.setReleaseDate(LocalDate.parse(releaseDate));
+        }
+    
+        if (image != null && !image.isEmpty()) {
+            String fileName = fileService.uploadImage(path, image);
+            existingProduct.setImage(fileName);
+        }
+    
+        Product updatedProduct = productRepo.save(existingProduct);
+        return modelMapper.map(updatedProduct, ProductDTO.class);
+    }
+    
+
+    @Override
     public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
-        Product productFromDB = productRepo.findById(productId)
+        Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
-        if (productFromDB == null) {
-            throw new APIException("Product not found with productId: " + productId);
-        }
-
         String fileName = fileService.uploadImage(path, image);
+        product.setImage(fileName);
 
-        productFromDB.setImage(fileName);
-
-        Product updatedProduct = productRepo.save(productFromDB);
-
+        Product updatedProduct = productRepo.save(product);
         return modelMapper.map(updatedProduct, ProductDTO.class);
     }
 
@@ -228,18 +139,16 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
-        List<Cart> carts = cartRepo.findCartsByProductId(productId);
-
-        carts.forEach(cart -> cartService.deleteProductFromCart(cart.getCartId(), productId));
-
         productRepo.delete(product);
-
-        return "Product with productId: " + productId + " deleted successfully !!!";
+        return "Product deleted successfully!";
     }
 
     @Override
-    public InputStream getProductImage(String fileName) throws FileNotFoundException {
-        return fileService.getResource(path, fileName);
+    public ProductDTO getProductById(Long productId) {
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+        return modelMapper.map(product, ProductDTO.class);
     }
 
     @Override
@@ -250,21 +159,11 @@ public class ProductServiceImpl implements ProductService {
             .collect(Collectors.toList());
     }
 
-    @Override
-    public ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,
-            String sortOrder) {
-        throw new UnsupportedOperationException("Unimplemented method 'searchByCategory'");
-    }
 
     @Override
-    public ProductResponse searchProductByKeyword(String keyword, Long categoryId, Integer pageNumber, Integer pageSize,
-            String sortBy, String sortOrder) {
-        throw new UnsupportedOperationException("Unimplemented method 'searchProductByKeyword'");
+    public InputStream getProductImage(String fileName) throws FileNotFoundException {
+        return fileService.getResource(path, fileName);
     }
 
-    @Override
-    public ProductDTO getProductById(Long productId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getProductById'");
-    }
 
 }

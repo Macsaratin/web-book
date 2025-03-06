@@ -41,9 +41,11 @@ public class Product {
     private Integer quantity;
     private double price;
     private double discount;
+    private double pricesale; 
     private LocalDate releaseDate;
     private String bookCondition;
     private String publisher;
+    private Integer status=1 ;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -53,4 +55,18 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    public void setPrice(double price) {
+        this.price = price;
+        updatePriceSale();
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+        updatePriceSale();
+    }
+
+    private void updatePriceSale() {
+        this.pricesale = this.price - (this.price * this.discount / 100);
+    }
 }

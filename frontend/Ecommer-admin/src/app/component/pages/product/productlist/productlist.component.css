@@ -12,6 +12,34 @@
     text-align: center;
   }
   
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  gap: 3px;
+}
+
+.button-group {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+}
+
+
+button {
+  background-color: #e53e3e;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #c53030;
+}
+button {
+  cursor: pointer;
+}
   .table-container {
     overflow-x: auto;
   }
@@ -41,5 +69,13 @@
   
   td:nth-child(6), td:nth-child(7) {
     font-weight: bold;
+  }
+
+  .text-green {
+    color: green;
+  }
+  
+.text-red {
+    color: red;
   }
   

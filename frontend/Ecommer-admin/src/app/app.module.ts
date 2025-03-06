@@ -23,6 +23,10 @@ import { BannerEditComponent } from './component/pages/banner/banner-edit/banner
 import { BannerTrashComponent } from './component/pages/banner/banner-trash/banner-trash.component';
 import { CategoryCreateComponent } from './component/pages/category/category-create/category-create.component';
 import { CategoryEditComponent } from './component/pages/category/category-edit/category-edit.component';
+import { ProductCreateComponent } from './component/pages/product/product-create/product-create.component';
+import { ProductUpdateComponent } from './component/pages/product/product-update/product-update.component';
+import { ProductDetailComponent } from './component/pages/product/product-detail/product-detail.component';
+import { ProductTrashComponent } from './component/pages/product/product-trash/product-trash.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +47,10 @@ import { CategoryEditComponent } from './component/pages/category/category-edit/
     BannerTrashComponent,
     CategoryCreateComponent,
     CategoryEditComponent,
+    ProductCreateComponent,
+    ProductUpdateComponent,
+    ProductDetailComponent,
+    ProductTrashComponent,
   ],
   imports: [
     BrowserModule,

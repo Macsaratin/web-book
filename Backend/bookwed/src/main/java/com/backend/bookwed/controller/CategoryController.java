@@ -14,13 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.bookwed.config.AppConstants;
 import com.backend.bookwed.entity.Category;
 import com.backend.bookwed.payloads.CategoryDTO;
-import com.backend.bookwed.payloads.CategoryResponse;
 import com.backend.bookwed.service.CategoryService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -45,26 +42,29 @@ public class CategoryController {
     public ResponseEntity <List<CategoryDTO>>getCategories(){
         List<CategoryDTO> category = categoryService.getCategoryAll();
         return ResponseEntity.ok(category);
-
-
     }
     
-
     @GetMapping("/public/categories")
-    public ResponseEntity<CategoryResponse> getCategories(
-            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
-            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
-            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
-            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
-
-        CategoryResponse categoryResponse = categoryService.getCategories(
-                pageNumber == 0 ? pageNumber : pageNumber - 1,
-                pageSize,
-                "id".equals(sortBy) ? "categoryId" : sortBy,
-                sortOrder);
-
-        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
+    public ResponseEntity <List<CategoryDTO>>getCPublicCategory(){
+        List<CategoryDTO> category = categoryService.getCategoryAll();
+        return ResponseEntity.ok(category);
     }
+
+    // @GetMapping("/public/categories")
+    // public ResponseEntity<CategoryResponse> getCategories(
+    //         @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+    //         @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+    //         @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+    //         @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR, required = false) String sortOrder) {
+
+    //     CategoryResponse categoryResponse = categoryService.getCategories(
+    //             pageNumber == 0 ? pageNumber : pageNumber - 1,
+    //             pageSize,
+    //             "id".equals(sortBy) ? "categoryId" : sortBy,
+    //             sortOrder);
+
+    //     return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
+    // }
 
     @GetMapping("/admin/categories/{categoryId}")
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long categoryId) {

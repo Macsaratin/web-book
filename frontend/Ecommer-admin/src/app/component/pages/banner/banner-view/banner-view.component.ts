@@ -38,26 +38,6 @@ export class BannerViewComponent implements OnInit {
       this.banner = [];
     }
   }
-  // async loadImage(bannerId: number, fileName: string) {
-  //   try {
-  //     const token = localStorage.getItem('jwt-token');
-  //     if (!token) throw new Error("Không tìm thấy token!");
-
-  //     const response = await fetch(`http://localhost:8080/api/public/images/banners/${fileName}`, {
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`,
-  //       }
-  //     });
-
-  //     if (!response.ok) throw new Error("Lỗi khi tải hình ảnh!");
-
-  //     const imageUrl = URL.createObjectURL(await response.blob());
-  //     this.imageUrls[bannerId] = imageUrl;
-  //   } catch (error) {
-  //     console.error("Lỗi khi lấy hình ảnh:", error);
-  //     this.imageUrls[bannerId] = 'assets/default-image.png'; // Ảnh mặc định nếu lỗi
-  //   }
-  // }
 
   getImageUrl(fileName: string): string {
     const token = localStorage.getItem('jwt-token');

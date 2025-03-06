@@ -1,35 +1,35 @@
 package com.backend.bookwed.service;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
-import com.backend.bookwed.entity.Product;
 import com.backend.bookwed.payloads.ProductDTO;
-import com.backend.bookwed.payloads.ProductResponse;
+
+import jakarta.transaction.Transactional;
 
 public interface ProductService {
-    ProductDTO addProduct(Long categoryId, Product product);
+    ProductDTO addProduct(Long categoryId, String productName, String description, Integer quantity, double price, double discount, String bookCondition, String publisher, String releaseDate, MultipartFile image) throws IOException;
 
-    // ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
-
-    // ProductResponse getAllProducts();
     List<ProductDTO> getAllProducts();
 
-    //   List<ProductDTO> getAllProductssWithoutPagination();
+    // ProductDTO updateProduct(Long productId, com.backend.bookwed.entity.Product product);
 
-
-    ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,String sortOrder);
-
-
-    ProductDTO updateProduct(Long productId, Product product);
+    ProductDTO updateProduct(Long productId, Long categoryId, String productName, String description, Integer quantity, 
+                                double price, double discount, String bookCondition, String publisher, 
+                                String releaseDate, MultipartFile image) throws IOException;
 
     ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
 
-    public InputStream getProductImage(String fileName) throws FileNotFoundException;
-
-    ProductResponse searchProductByKeyword(String keyword, Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,String sortOrder);
     String deleteProduct(Long productId);
+
     ProductDTO getProductById(Long productId);
+    @Transactional
+    public void updateProductStatus(Long productId, Integer status);
+    List<ProductDTO> getTrash();
+
+    public InputStream getProductImage(String fileName) throws FileNotFoundException;
+    
 }

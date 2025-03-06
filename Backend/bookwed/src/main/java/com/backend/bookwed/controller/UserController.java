@@ -54,6 +54,12 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
     
+    @GetMapping("/public/users")
+    public ResponseEntity<List<UserDTO>> getUser() {
+        List<UserDTO> users = userService.getAllUsersWithoutPagination();
+        return ResponseEntity.ok(users);
+    }
+    
 
     @PutMapping("/admin/users/{userId}")
     public ResponseEntity<UserDTO> updateUserByAdmin(@RequestBody UserDTO userDTO, @PathVariable Long userId) {

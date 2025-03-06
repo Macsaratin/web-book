@@ -1,6 +1,9 @@
 <div class="product-list-container">
     <h2>Danh Sách Sản Phẩm</h2>
-  
+    <div class="button-container">
+      <button mat-raised-button color="primary" routerLink="/product/trash">Thùng rác</button>
+      <button mat-raised-button class="btn-success" routerLink="/product/create">Thêm</button>
+    </div>
     <div class="table-container">
       <table>
         <thead>
@@ -11,14 +14,16 @@
             <th>Hình Ảnh</th>
             <th>Số Lượng</th>
             <th>Giá</th>
+            <th>Giảm giá</th>
             <th>Giá Sale</th>
-
             <th>Danh Mục</th>
-            <th>Trạng Thái</th>
+            <th>Tình Trạng</th>
+            <th>Trạng thái</th>
+            <th>Chức năng</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let product of products; let i = index">
+          <tr *ngFor="let product of products | paginate: { itemsPerPage: 4, currentPage: currentPage }; let i = index">
             <td>{{ i + 1 }}</td>
             <td>{{ product.productId }}</td>
             <td>{{ product.productName }}</td>
@@ -26,14 +31,33 @@
                 <img *ngIf="product.image" [src]="getImageUrl(product.image)" [alt]="product.productName" width="60" height="auto" />
             </td>
             <td>{{ product.quantity }}</td>
-            <td>{{ product.price }}</td>
-            <td>{{ product.discount }}</td>
+            <td>{{ formatPrice(product.price) }}</td>
+            <td>{{ product.discount }}%</td>
+            <td>{{ formatPrice(product.pricesale) }}</td>
+
 
             <td>{{ product.category?.categoryName }}</td>
-            <td>{{ product.status === 1 ? 'Hiển thị' : 'Ẩn' }}</td>
+            <td>{{ product.bookCondition}}</td>
+            <td>
+              <p (click)="statusProduct(product.productId)">
+                <fa-icon
+                  [icon]="product.status === 1 ?  faToggleOn : faToggleOff"
+                  [ngClass]="product.status === 1 ? 'text-green' : 'text-red'">
+                </fa-icon>
+              </p>
+            </td>
+            <td>
+              <div class="button-group">
+                  <button (click)="moveToTrash(product.productId)">xoá</button>
+                  <button mat-raised-button class="btn-success" [routerLink]="['/product/edit', product.productId]">Sửa</button> 
+                  <button [routerLink]="['/product/detail/', product.productId]">Chi tiết</button>
+              </div>
+          </td>
           </tr>
         </tbody>
       </table>
+
+      <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
     </div>
   </div>
   

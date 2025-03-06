@@ -1,0 +1,35 @@
+<div class="trash-container">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold mb-4 text-center">Thùng rác Sản phẩm</h2>
+      
+        <div *ngIf="loading" class="text-center">Đang tải...</div>
+      
+        <div *ngIf="!loading && trashProducts.length === 0" class="text-center text-gray-500">
+          Không có sản phẩm nào trong thùng rác.
+        </div>
+      
+        <table *ngIf="!loading && trashProducts.length > 0" class="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border p-2">Tên Sản phẩm</th>
+              <th class="border p-2">Hình Ảnh</th>
+              <th class="border p-2">Giá</th>
+              <th class="border p-2">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of trashProducts">
+              <td class="border p-2">{{ product.productName }}</td>
+              <td class="border p-2 text-center">
+                <img [src]="'http://localhost:8080/api/public/images/products/' + product.image" alt="Product Image" class="w-16 h-16 object-cover">
+              </td>
+              <td class="border p-2 text-center">{{ product.price | currency:'VND' }}</td>
+              <td class="border p-2 text-center">
+                <button (click)="restoreProduct(product.productId)" class="bg-blue-500 text-white px-2 py-1 rounded">Khôi phục</button>
+                <button (click)="deletePermanently(product.productId)" class="bg-red-500 text-white px-2 py-1 rounded ml-2">Xóa vĩnh viễn</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+</div>

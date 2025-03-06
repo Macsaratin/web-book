@@ -59,10 +59,10 @@ public class BannerServiceImpl implements BannerService {
 
             // Kiểm tra xem có ảnh tải lên không
             if (image != null && !image.isEmpty()) {
-                String imageUrl = saveImage(image); // Lưu ảnh & lấy URL
+                String imageUrl = saveImage(image);
                 banner.setImage(imageUrl);
             } else {
-                banner.setImage("default.png"); // Ảnh mặc định nếu không có ảnh
+                banner.setImage("default.png");
             }
 
             Banner savedBanner = bannerRepo.save(banner);
@@ -86,7 +86,6 @@ public class BannerServiceImpl implements BannerService {
             .collect(Collectors.toList());
     }
 
-
     @Override
     public void updateBannerStatus(Long id, Integer status) {
         Banner banner = bannerRepo.findById(id)
@@ -95,6 +94,7 @@ public class BannerServiceImpl implements BannerService {
         banner.setStatus(status);
         bannerRepo.save(banner);
     }
+    
     @Override
     public BannerDTO getBannerById(Long bannerId) {
         Banner banner = bannerRepo.findById(bannerId).orElseThrow(() -> new ResourceNotFoundException("Banner", "bannerId", bannerId));
