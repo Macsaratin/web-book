@@ -1,0 +1,35 @@
+<div class="cart-container">
+    <h2>Danh sách giỏ hàng</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID Giỏ hàng</th>
+          <th>Sản phẩm</th>
+          <th>Số lượng</th>
+          <th>ToTal Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cart of carts">
+          <td>{{ cart.cartId }}</td>
+          <td>
+            <ul>
+              <li *ngFor="let product of cart.products">
+                {{ product.productName }}
+              </li>
+            </ul>
+
+          </td>
+          <td>
+            <ul>
+                <li *ngFor="let product of cart.products">
+                  {{ product.quantity }}
+                </li>
+              </ul>
+          </td>
+          <td>{{cart.totalPrice}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

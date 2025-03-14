@@ -1,30 +1,15 @@
 <template>
-  <div class="container-fluid hero-header banner-container">
-    <div class="container py-5">
-      <div class="row g-5 align-items-center">
-        <div class="col-md-12 col-lg-7 text-center text-lg-start">
-          <h4 class="mb-3 text-success fw-bold">100% Organic Foods</h4>
-          <h1 class="mb-4 display-3 fw-bold text-dark">Organic Veggies & Fruits</h1>
-          <p class="lead text-muted">Fresh from the farm to your table</p>
-          <div class="position-relative mx-auto d-inline-block">
-            <input class="form-control border-2 border-success w-75 py-3 px-4 rounded-pill" type="text" placeholder="Search for organic foods">
-            <button type="submit" class="btn btn-success border-2 py-3 px-4 position-absolute rounded-pill text-white" style="top: 0; right: 15%;">Search</button>
-          </div>
-        </div>
-        <div class="col-md-12 col-lg-5">
-          <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
+  <div class="container-fluid hero-header banner-container" style="margin-top: 90px;">
+    <div class="container-fluid p-0">
+      <div class="row g-0 align-items-center justify-content-center">
+        <div class="col-12">
+          <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img src="#st" class="img-fluid w-100 rounded" alt="Fruits">
-                <div class="carousel-caption">
-                  <a href="#" class="btn btn-warning px-4 py-2 rounded">Fruits</a>
-                </div>
-              </div>
-              <div class="carousel-item">
-                <img src="#st" class="img-fluid w-100 rounded" alt="Vegetables">
-                <div class="carousel-caption">
-                  <a href="#" class="btn btn-warning px-4 py-2 rounded">Vegetables</a>
-                </div>
+              <div v-for="(banner, index) in banners" :key="banner.id" :class="['carousel-item', { active: index === 0 }]">
+                <img :src="getImageUrl(banner.image)"
+                      class="img-fluid w-100"
+                      alt="Banner image"
+                      style="height:  85vh; object-fit: cover;">
               </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
@@ -40,15 +25,34 @@
   </div>
 </template>
 
+<script setup>
+import { ref, onMounted } from 'vue';
+import bannerService from '@/service/bannerService';
+
+const banners = ref([]);
+
+const fetchBanners = async () => {
+  banners.value = await bannerService.getBanner();
+};
+
+onMounted(async () => {
+  await fetchBanners();
+});
+
+const getImageUrl = (fileName) => {
+  return bannerService.getImageUrl(fileName);
+};
+</script>
+
 <style scoped>
 .hero-header {
   background: linear-gradient(to right, #d4fc79, #96e6a1);
-  padding: 80px 0;
-  border-radius: 20px;
+  padding: 0;
+  border-radius: 0;
+  margin-top: 100px;
 }
-.carousel-caption {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  border-radius: 10px;
+.carousel-control-prev-icon, .carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
 }
 </style>

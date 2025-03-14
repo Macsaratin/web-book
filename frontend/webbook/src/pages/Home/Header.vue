@@ -8,7 +8,7 @@
     <div class="container px-0">
       <nav class="navbar navbar-light bg-white navbar-expand-xl">
         <router-link to="/" class="navbar-brand">
-          <h1 class="text-primary display-6">Fruitables</h1>
+          <h1 class="text-primary display-6">Books</h1>
         </router-link>
         <button class="navbar-toggler py-2 px-3" type="button" @click="toggleMenu">
           <span class="fa fa-bars text-primary"></span>

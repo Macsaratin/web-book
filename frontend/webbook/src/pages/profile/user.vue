@@ -1,51 +1,50 @@
 <template>
-    <div class="container mt-4">
-      <h2 class="text-center">User Profile</h2>
-      <div class="card">
-        <div v-for="user in user" :key="user.userId"  class="card-body">
-          <h5 class="card-title">Thông tin cá nhân</h5>
-          <p><strong>Tên:</strong> {{ user.firstName }} {{ user.lastName }}</p>
-          <p><strong>Email:</strong> {{ user.email }}</p>
-          <p><strong>Phone:</strong> {{ user.mobileNumber }}</p>
-          <button class="btn btn-danger mt-3" @click="logout">Đăng xuất</button>
+
+  <div class="min-h-screen bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+      <h1 class="text-xl font-bold">Vue.js User Interface</h1>
+    </nav>
+    <div class="container mx-auto mt-6 p-4 bg-white rounded shadow-md">
+      <h2 class="text-lg font-semibold mb-4">Hồ sơ cá nhân</h2>
+      <div class="flex items-center space-x-4">
+        <img :src="profile.avatar" alt="Avatar" class="w-16 h-16 rounded-full border" />
+        <div>
+          <h3 class="text-xl font-bold">{{ profile.name }}</h3>
+          <p class="text-gray-600">{{ profile.email }}</p>
         </div>
       </div>
+      <button 
+        @click="editProfile" 
+        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+      >
+        Chỉnh sửa hồ sơ
+      </button>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted } from "vue";
-  import { useRouter } from "vue-router";
-  import UserService from "@/service/UserService";
-  
-  const user = ref({});
-  const router = useRouter();
-  
-  const fetchUserInfo = async () => {
-    try {
-      const userInfo = await UserService.getUser();
-      user.value = userInfo;
-    } catch (error) {
-      console.error("Lỗi khi lấy thông tin user:", error);
+  </div>
+</template>
+
+<script>
+import Header from '../Home/Header.vue';
+export default {
+  data() {
+    return {
+      profile: {
+        name: 'Nguyễn Văn A',
+        email: 'nguyenvana@example.com',
+        avatar: 'https://via.placeholder.com/150'
+      }
+    };
+  },
+  methods: {
+    editProfile() {
+      alert('Chức năng chỉnh sửa hồ sơ đang phát triển!');
     }
-  };
-  
-  const logout = () => {
-    localStorage.removeItem("username"); // Xóa thông tin user
-    router.push("/"); // Chuyển hướng về trang login
-  };
-  
-  onMounted(fetchUserInfo);
-  </script>
+  }
+};
+</script>
+
 <style>
-.container {
-    max-width: 600px;
-    margin: auto;
-  }
-  
-  .card {
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  }
-</style>  
+body {
+  font-family: Arial, sans-serif;
+}
+</style>

@@ -57,7 +57,7 @@
           <div id="tab-1" class="tab-pane fade show p-0 active">
             <div class="row g-4 d-flex flex-wrap justify-content-start">
               <div v-for="product in filteredProducts" :key="product.id" class="col-md-6 col-lg-4 col-xl-3 d-flex">
-                <div class="rounded position-relative w-100 product-card">
+                <div @click="OneClickDetail(product.productId)"class="rounded position-relative w-100 product-card">
                   <div class="product-image">
                     <img
                       :src="getImageUrl(product.image)"
@@ -106,6 +106,7 @@
 import { ref, onMounted, computed } from 'vue';
 import ProductService from '@/service/productService';
 import categoryService from '@/service/categoryService';
+import router from '@/router/Router';
 
 const products = ref([]);
 const categories = ref([]);
@@ -150,6 +151,9 @@ onMounted(async () => {
   await fetchProducts();
   await fetchCategories();
 });
+const OneClickDetail = (productId) => {
+  router.push(`/product/${productId}`);
+};
 
 const addToCart = (product) => {
   console.log(`Thêm vào giỏ: ${product.productName}`);

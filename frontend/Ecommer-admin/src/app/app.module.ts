@@ -27,6 +27,7 @@ import { ProductCreateComponent } from './component/pages/product/product-create
 import { ProductUpdateComponent } from './component/pages/product/product-update/product-update.component';
 import { ProductDetailComponent } from './component/pages/product/product-detail/product-detail.component';
 import { ProductTrashComponent } from './component/pages/product/product-trash/product-trash.component';
+import { CartListComponent } from './component/pages/cart/cart-list/cart-list.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { ProductTrashComponent } from './component/pages/product/product-trash/p
     ProductUpdateComponent,
     ProductDetailComponent,
     ProductTrashComponent,
+    CartListComponent,
   ],
   imports: [
     BrowserModule,

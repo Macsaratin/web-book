@@ -59,6 +59,13 @@ public class BannerController {
     }
 
     
+    @GetMapping("/public/banner")
+    public ResponseEntity<List<BannerDTO>> getpublicbanner() {
+        List<BannerDTO> banner = bannerService.getBannerAll();
+        return ResponseEntity.ok(banner);
+    }
+
+    
     @PutMapping("/admin/update-status")
     public ResponseEntity<String> updateBannerStatus(@RequestBody Map<String, Object> requestData) {
         Long id = ((Number) requestData.get("id")).longValue();
