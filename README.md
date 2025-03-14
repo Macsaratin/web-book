@@ -77,11 +77,13 @@ Mọi đóng góp đều được hoan nghênh! Vui lòng fork repository, tạo
 
 
 ## Giao diện admin
-
+## category
 -- category
-<img width="532" alt="{9D7423E5-7607-4680-9B3E-6D859B4BD519}" src="https://github.com/user-attachments/assets/4162d8bd-88d9-4651-babd-7dd9d107427e" />
 
+<img width="532" alt="{9D7423E5-7607-4680-9B3E-6D859B4BD519}" src="https://github.com/user-attachments/assets/4162d8bd-88d9-4651-babd-7dd9d107427e" />
+## Product
 -- sản phẩm
+
 <img width="589" alt="{EF986DC3-FBA8-4946-BA5E-4FE4D772115C}" src="https://github.com/user-attachments/assets/de56dd46-3af2-48c8-8079-a083e3efa036" />
 
 -- thêm sản phẩm
