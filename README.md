@@ -4,7 +4,7 @@
 Web-Book là một trang web thương mại điện tử chuyên bán sách trực tuyến, giúp người dùng dễ dàng tìm kiếm, mua và đánh giá sách. Hệ thống bao gồm giao diện người dùng (Frontend) và trang quản trị (Admin Dashboard) để quản lý nội dung và đơn hàng.
 
 ## Công nghệ sử dụng
-- **Frontend**: ReactJS, TypeScript, Tailwind CSS
+- **Frontend**: ReactJS, TypeScript, Tailwind CSS, Bootstrap, Vuejs
 - **Admin Dashboard**: Angular, Angular Material
 - **Backend**: Java, Spring Boot
 - **Database**: MySql
