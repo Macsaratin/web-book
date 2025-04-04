@@ -88,7 +88,7 @@
                       </p>
                     </div>
 
-                    <button @click="addToCart(product)" class="btn border border-secondary rounded-pill px-3 text-primary mt-3">
+                    <button class="btn border border-secondary rounded-pill px-3 text-primary mt-3">
                       <i class="fa fa-shopping-bag me-2 text-primary"></i> Thêm vào giỏ
                     </button>
                   </div>
@@ -155,9 +155,6 @@ const OneClickDetail = (productId) => {
   router.push(`/product/${productId}`);
 };
 
-const addToCart = (product) => {
-  console.log(`Thêm vào giỏ: ${product.productName}`);
-};
 </script>
 <style scoped>
 .sale-label {

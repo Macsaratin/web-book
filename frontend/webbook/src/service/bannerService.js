@@ -12,8 +12,8 @@ export default{
             });
             return response.data;
         } catch (error) {
-            console.error("Lỗi khi lấy danh mục:", error.message);
-      return [];
+            console.error("Lỗi khi lấy banner:", error.message);
+            return [];
         }
     },
     getImageUrl(fileName) {

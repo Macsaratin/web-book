@@ -26,4 +26,6 @@ public class ProductDTO {
     public double getPricesale() {
         return price - (price * discount / 100);
     }
+
+    private int purchasedQuantity;
 }

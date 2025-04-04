@@ -11,7 +11,7 @@ import { Injectable } from '@angular/core';
         try {
             const token  = localStorage.getItem('jwt-token');
             if(!token) throw new Error ('token incorrect');
-            const  response = await axios.get(`${this.api_urls}/admin/carts`,{
+            const  response = await axios.post(`${this.api_urls}/admin/carts`,{
                 headers:{
                     'Accept':'application/json',
                     'Authorization': `Bearer ${token}`
@@ -22,6 +22,25 @@ import { Injectable } from '@angular/core';
             console.error("Lỗi khi lấy giỏ hàng:", error);
             return [];
             
+        }
+    }
+    async getAllCarts() {
+        try {
+            const token = localStorage.getItem('jwt-token');
+            if (!token) throw new Error('Token không hợp lệ');
+
+            const response = await axios.get(`${this.api_urls}/admin/carts`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            // Đảm bảo API trả về `purchasedQuantity` trong danh sách sản phẩm
+            return response.data;
+        } catch (error) {
+            console.error("Lỗi khi lấy giỏ hàng:", error);
+            return [];
         }
     }
  }

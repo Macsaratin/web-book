@@ -58,13 +58,13 @@ public class OrderServiceImpl implements OrderService {
     public ModelMapper modelMapper;
 
     @Override
-    public OrderDTO placeOrder(String emailId, Long cartId, String paymentMethod) {
-        Cart cart = cartRepo.findCartByEmailAndCartId(emailId, cartId);
+    public OrderDTO placeOrder(Long userId, Long cartId, String paymentMethod) {
+        Cart cart = cartRepo.findCartByUserIdAndCartId(userId, cartId);
         if (cart == null) {
             throw new ResourceNotFoundException("Cart", "cartId", cartId);
         }
         Order order = new Order();
-        order.setEmail(emailId);
+        order.setEmail(userService.getUserById(userId).getEmail());
         order.setOrderDate(LocalDate.now());
         order.setTotalAmount(cart.getTotalPrice());
         order.setOrderStatus("Order Accepted!");
@@ -106,19 +106,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getOrdersByUser(String emailId) {
-        List<Order> orders = orderRepo.findAllByEmail(emailId);
+    public List<OrderDTO> getOrdersByUser(Long userId) {
+        List<Order> orders = orderRepo.findAllByEmail(userService.getUserById(userId).getEmail());
         List<OrderDTO> orderDTOs = orders.stream().map(order -> modelMapper.map(order, OrderDTO.class))
                 .collect(Collectors.toList());
         if (orderDTOs.size() == 0) {
-            throw new APIException("No orders placed yet by the user with email: " + emailId);
+            throw new APIException("No orders placed yet by the user with email: " + userService.getUserById(userId).getEmail());
         }
         return orderDTOs;
     }
 
     @Override
-    public OrderDTO getOrder(String emailId, Long orderId) {
-        Order order = orderRepo.findOrderByEmailAndOrderId(emailId, orderId);
+    public OrderDTO getOrder(Long userId, Long orderId) {
+        Order order = orderRepo.findOrderByEmailAndOrderId(userService.getUserById(userId).getEmail(), orderId);
         if (order == null) {
             throw new ResourceNotFoundException("Order", "orderId", orderId);
         }
@@ -150,8 +150,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO updateOrder(String emailId, Long orderId, String orderStatus) {
-        Order order = orderRepo.findOrderByEmailAndOrderId(emailId, orderId);
+    public OrderDTO updateOrder(Long userId, Long orderId, String orderStatus) {
+        Order order = orderRepo.findOrderByEmailAndOrderId(userService.getUserById(userId).getEmail(), orderId);
         if (order == null) {
             throw new ResourceNotFoundException("Order", "orderId", orderId);
         }

@@ -53,6 +53,11 @@ public class UserController {
         List<UserDTO> users = userService.getAllUsersWithoutPagination();
         return ResponseEntity.ok(users);
     }
+    @GetMapping("/users/all")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsersWithoutPagination();
+        return ResponseEntity.ok(users);
+    }
     
     @GetMapping("/public/users")
     public ResponseEntity<List<UserDTO>> getUser() {

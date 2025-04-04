@@ -18,16 +18,15 @@
                 {{ product.productName }}
               </li>
             </ul>
-
           </td>
           <td>
             <ul>
                 <li *ngFor="let product of cart.products">
-                  {{ product.quantity }}
+                  {{ product.purchasedQuantity }}
                 </li>
               </ul>
           </td>
-          <td>{{cart.totalPrice}}</td>
+          <td>{{ cart.totalPrice | number:'1.0-0' }} VND</td>
         </tr>
       </tbody>
     </table>

@@ -21,7 +21,7 @@
             <div class="nav-item dropdown">
               <a href="#" class="nav-link dropdown-toggle" @click.prevent="toggleDropdown">Pages</a>
               <div v-if="isDropdownOpen" class="dropdown-menu m-0 bg-secondary rounded-0">
-                <router-link to="#st" class="dropdown-item">Cart</router-link>
+                <router-link to="/cart" class="dropdown-item">Cart</router-link>
                 <router-link to="#st" class="dropdown-item">Checkout</router-link>
                 <router-link to="#st" class="dropdown-item">Testimonial</router-link>
                 <router-link to="#st" class="dropdown-item">404 Page</router-link>
@@ -33,16 +33,16 @@
             <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" @click="openSearch">
               <i class="fas fa-search text-primary"></i>
             </button>
-            <router-link to="#st" class="position-relative me-4 my-auto">
+            <router-link to="/cart" class="position-relative me-4 my-auto">
               <i class="fa fa-shopping-bag fa-2x"></i>
               <span v-if="cartCount > 0" class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">{{ cartCount }}</span>
             </router-link>
-            <!-- Khu vực người dùng với sự kiện click -->
             <div class="my-auto">
               <router-link to="/profile" class="my-auto">
                 <i class="fas fa-user fa-2x"></i>
               </router-link>
-              <span class="text-primary fw-bold"style="cursor: pointer;">
+              <span v-if="user.email" class="text-primary fw-bold" style="cursor: pointer;">
+                {{ user.email }}
               </span>
             </div>
           </div>
@@ -55,12 +55,52 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import UserService from '@/service/UserService';
-import { useRouter } from 'vue-router';
 
 const loading = ref(true);
 const isMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
 const cartCount = ref(3);
+const user = ref({});
+
+const fetchUser = async () => {
+  try {
+    const token = localStorage.getItem('jwt-token');
+    if (!token) {
+      console.log("No token found");
+      return;
+    }
+
+    const users = await UserService.getUser();
+    const currentUser = users.find(u => u.token === token);
+    if (currentUser) {
+      user.value = currentUser;
+      return;
+    }
+    const email = localStorage.getItem('email');
+    if (email) {
+      const userData = await UserService.getUserInfo(email);
+      user.value = userData || {};
+    }
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    user.value = {};
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(async () => {
+  await fetchUser();
+  
+  window.addEventListener("scroll", () => {
+    const header = document.querySelector(".header");
+    if (window.scrollY > 50) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
+    }
+  });
+});
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -73,34 +113,14 @@ const toggleDropdown = () => {
 const openSearch = () => {
   console.log("Search clicked");
 };
-
-// Tự động ẩn spinner sau 2 giây
-setTimeout(() => {
-  loading.value = false;
-}, 2000);
-
-onMounted(async () => {
-  // Xử lý hiệu ứng cuộn cho header
-  window.addEventListener("scroll", () => {
-    const header = document.querySelector(".header");
-    if (window.scrollY > 50) {
-      header.classList.add("scrolled");
-    } else {
-      header.classList.remove("scrolled");
-    }
-  });
-  await fetchUser(); // Lấy thông tin người dùng khi component được gắn
-});
 </script>
 
 <style scoped>
-/* Navbar active link */
 .navbar-nav .nav-link.active {
   font-weight: bold;
   color: #007bff !important;
 }
 
-/* Header cố định với hiệu ứng khi cuộn */
 .header {
   transition: all 0.3s ease-in-out;
 }
@@ -111,12 +131,10 @@ onMounted(async () => {
   padding: 5px 0;
 }
 
-/* Cách banner 5px */
 .banner-container {
-  margin-top: 85px; /* Giữ khoảng cách với header */
+  margin-top: 85px;
 }
 
-/* Style cho tên người dùng */
 .text-primary {
   color: #007bff !important;
 }

@@ -39,29 +39,22 @@ public class CartController {
     }
 
     @GetMapping("/admin/carts")
-    public ResponseEntity<Map<String, List<CartDTO>>> getCarts() {
-        List<CartDTO> cartDTOs = cartService.getAllCarts();
-
-        Map<String, List<CartDTO>> response = new HashMap<>();
-        response.put("content", cartDTOs);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public List<CartDTO> getAllCarts() {
+        return cartService.getAllCarts();
+    }
+    @GetMapping("/public/carts")
+    public List<CartDTO> getAllCartsPublic() {
+        return cartService.getAllCarts();
     }
 
-    @GetMapping("/public/users/{emailId}/carts/{cartId}")
-    public ResponseEntity<CartDTO> getCartById(@PathVariable String emailId, @PathVariable Long cartId) {
-        CartDTO cartDTO = cartService.getCart(emailId, cartId);
 
-        return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.OK);
+    @GetMapping("/public/users/{userId}/carts/{cartId}")
+    public ResponseEntity<CartDTO> getCartById(@PathVariable Long userId, @PathVariable Long cartId) {
+        CartDTO cartDTO = cartService.getCart(userId, cartId);
+        return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/public/carts/{cartId}/products/{productId}/quantity/{quantity}")
-    public ResponseEntity<CartDTO> updateCartProduct(@PathVariable Long cartId, @PathVariable Long productId,
-            @PathVariable Integer quantity) {
-        CartDTO cartDTO = cartService.updateProductQuantityInCart(cartId, productId, quantity);
-
-        return new ResponseEntity<CartDTO>(cartDTO, HttpStatus.OK);
-    }
+    
 
     @DeleteMapping("/public/carts/{cartId}/product/{productId}")
     public ResponseEntity<String> deleteProductFromCart(@PathVariable Long cartId, @PathVariable Long productId) {

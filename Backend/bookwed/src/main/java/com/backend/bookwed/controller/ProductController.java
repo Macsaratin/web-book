@@ -100,21 +100,17 @@ public class ProductController {
         productService.updateProductStatus(id,status);
         return ResponseEntity.ok("Cập nhật trạng thái sản phẩm thành công!");
     }
-
-    
     @PutMapping("/admin/products/{productId}/image")
     public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId,
             @RequestParam("image") MultipartFile image) throws IOException {
         ProductDTO updatedProduct = productService.updateProductImage(productId, image);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
-
     @DeleteMapping("/admin/products/{productId}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long productId) {
         String status = productService.deleteProduct(productId);
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
-
     @GetMapping("/public/images/products/{fileName}")
     public ResponseEntity<InputStreamResource> getImage(@PathVariable String fileName) throws FileNotFoundException {
         InputStream imageStream = productService.getProductImage(fileName);

@@ -15,7 +15,6 @@ export default {
       throw error;
     }
   },
-
   // Đăng nhập
   async login(username, password) {
     try {
@@ -24,34 +23,37 @@ export default {
         password 
       }, {
         headers: { 'Content-Type': 'application/json' },
-        withCredentials: true, // Giữ session nếu có
+        withCredentials: true
       });
-
-      const token = response.data['jwt-token'];
+      
+      const { userId, 'jwt-token': token } = response.data;
+      
+  
+      // Store token and userId
+      localStorage.setItem('userId', userId);
       localStorage.setItem('jwt-token', token);
       localStorage.setItem('username', username);
-
-      // Lấy thông tin giỏ hàng của người dùng
+  
+      // Get user cartId
       const userResponse = await axios.get(`${API_URL}/public/users/email/${username}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
-
-      const cartID = userResponse.data.cart.cartID;
-      localStorage.setItem('cartID', cartID);
-
+  
+      const cartId = userResponse.data.cart?.cartId;
+      localStorage.setItem('cartId', cartId);
+  
       return response.data;
     } catch (error) {
       throw new Error('Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.');
     }
   },
-
   // Đăng xuất
   logout() {
     localStorage.removeItem('jwt-token');
     localStorage.removeItem('username');
-    localStorage.removeItem('cartID');
+    localStorage.removeItem('cartId');
+    this.$router.push('/login');
   },
-
   // Kiểm tra người dùng đã đăng nhập hay chưa
   isAuthenticated() {
     return !!localStorage.getItem('jwt-token');
@@ -61,18 +63,18 @@ export default {
   async getUserInfo() {
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('jwt-token');
-
+  
     if (!username || !token) {
       throw new Error('Không có thông tin người dùng.');
     }
-
+  
     try {
       const response = await axios.get(`${API_URL}/public/users/email/${username}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       return response.data;
     } catch (error) {
-      throw error;
+      throw new Error('Không thể lấy thông tin người dùng.');
     }
   }
 };

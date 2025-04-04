@@ -3,6 +3,7 @@ package com.backend.bookwed.controller;
 import java.util.Collections;
 import java.util.Map;
 
+import org.hibernate.validator.internal.util.logging.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import com.backend.bookwed.payloads.UserDTO;
 import com.backend.bookwed.security.JWTUtil;
 import com.backend.bookwed.service.UserService;
 
+import ch.qos.logback.classic.Logger;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
@@ -40,10 +42,12 @@ private AuthenticationManager authenticationManager;
 @Autowired
 private PasswordEncoder passwordEncoder;
 
+
 @PostMapping("/register")
 public ResponseEntity<Map<String, Object>> registerHandler(@Valid @RequestBody UserDTO user)
         throws UserNotFoundException {
     String encodedPass = passwordEncoder.encode(user.getPassword());
+    
 
     user.setPassword(encodedPass);
 
@@ -57,17 +61,27 @@ public ResponseEntity<Map<String, Object>> registerHandler(@Valid @RequestBody U
 }
 
 @PostMapping("/login")
-public Map<String, Object> loginHandler(@Valid @RequestBody LoginCredentials credentials) {
+public ResponseEntity<Map<String, Object>> loginHandler(@Valid @RequestBody LoginCredentials credentials) {
+    try {
+        UsernamePasswordAuthenticationToken authCredentials = new UsernamePasswordAuthenticationToken(
+                credentials.getEmail(), credentials.getPassword());
 
-    UsernamePasswordAuthenticationToken authCredentials = new UsernamePasswordAuthenticationToken(
-            credentials.getEmail(), credentials.getPassword());
+        authenticationManager.authenticate(authCredentials);
 
-    authenticationManager.authenticate(authCredentials);
+        String token = jwtUtil.generateToken(credentials.getEmail());
 
-    String token = jwtUtil.generateToken(credentials.getEmail());
+        // Trả về token và message trong JSON response
+        Map<String, Object> response = Map.of(
+            "jwt-token", token,
+            "message", "Đăng nhập thành công"
+        );
 
-    return Collections.singletonMap("jwt-token", token);
+        return ResponseEntity.ok(response);
 
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Collections.singletonMap("error", "Email hoặc mật khẩu không đúng"));
+    }
 }
 
 }

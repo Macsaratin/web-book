@@ -45,6 +45,35 @@ export default {
       }
       throw error;
     }
-  }  
+  },
+  async addToCart(product, quantity,cartId) {
+    const token = localStorage.getItem('jwt-token');
+    if (!token) {
+      throw new Error('Vui lòng đăng nhập trước khi thêm sản phẩm vào giỏ hàng.');
+    }
+    if (!cartId) {
+      throw new Error('Không tìm thấy giỏ hàng của bạn.');
+    }
+    if (!product || !product.productId) {
+      throw new Error('Sản phẩm không hợp lệ.');
+    }
+    try {
+      const response = await axios.post(
+        `${API_URL}/public/carts/${cartId}/products/${product.productId}/quantity/${quantity}`,
+        { product: product.productId, quantity: product.quantity || 1 },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );      
+
+      return response.data;
+    } catch (error) {
+      console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error.response?.data || error.message);
+      throw new Error('Không thể thêm sản phẩm vào giỏ hàng.');
+    }
+  },
 
 };
