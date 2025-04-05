@@ -18,14 +18,13 @@ public class ProductDTO {
     private double price;
     private double discount;
 
-    private CategoryDTO category; // Danh mục cha
-    private LocalDate releaseDate; // Ngày phát hành
-    private String bookCondition; // Tình trạng sách
-    private String publisher; // Nhà xuất bản
+    private CategoryDTO category;
+    private LocalDate releaseDate;
+    private String bookCondition;
+    private String publisher;
     private Integer status;
     public double getPricesale() {
         return price - (price * discount / 100);
     }
-
     private int purchasedQuantity;
 }

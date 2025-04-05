@@ -1,13 +1,10 @@
 <template>
     <div>
       <Header />
-  
       <Banner />
-  
       <main class="content">
         <Product />
       </main>
-  
       <Footer />
     </div>
   </template>

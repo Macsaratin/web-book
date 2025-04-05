@@ -48,9 +48,9 @@ public class CartController {
     }
 
 
-    @GetMapping("/public/users/{userId}/carts/{cartId}")
-    public ResponseEntity<CartDTO> getCartById(@PathVariable Long userId, @PathVariable Long cartId) {
-        CartDTO cartDTO = cartService.getCart(userId, cartId);
+    @GetMapping("/public/users/{emailId}/carts/{cartId}")
+    public ResponseEntity<CartDTO> getCartById(@PathVariable String emailId, @PathVariable Long cartId) {
+        CartDTO cartDTO = cartService.getCart(emailId, cartId);
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 

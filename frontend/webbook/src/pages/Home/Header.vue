@@ -33,10 +33,19 @@
             <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" @click="openSearch">
               <i class="fas fa-search text-primary"></i>
             </button>
-            <router-link to="/cart" class="position-relative me-4 my-auto">
+            <router-link 
+              :to="{
+                path: '/users/' + email + '/carts/' + cartId,
+                query: { cartCount: cartCount }
+              }" 
+              class="position-relative me-4 my-auto">
               <i class="fa fa-shopping-bag fa-2x"></i>
-              <span v-if="cartCount > 0" class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">{{ cartCount }}</span>
+              <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" 
+                style="top: -5px; left: 15px; height: 20px; min-width: 20px;">
+                {{ cartCount }}
+              </span>
             </router-link>
+
             <div class="my-auto">
               <router-link to="/profile" class="my-auto">
                 <i class="fas fa-user fa-2x"></i>
@@ -53,7 +62,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted , nextTick  } from 'vue';
 import UserService from '@/service/UserService';
 
 const loading = ref(true);
@@ -61,6 +70,9 @@ const isMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
 const cartCount = ref(3);
 const user = ref({});
+
+const email = localStorage.getItem('email');
+const cartId = localStorage.getItem('cartId');
 
 const fetchUser = async () => {
   try {
@@ -70,7 +82,7 @@ const fetchUser = async () => {
       return;
     }
 
-    const users = await UserService.getUser();
+    const users = await UserService.getUsers();
     const currentUser = users.find(u => u.token === token);
     if (currentUser) {
       user.value = currentUser;
@@ -91,14 +103,19 @@ const fetchUser = async () => {
 
 onMounted(async () => {
   await fetchUser();
-  
-  window.addEventListener("scroll", () => {
-    const header = document.querySelector(".header");
-    if (window.scrollY > 50) {
-      header.classList.add("scrolled");
-    } else {
-      header.classList.remove("scrolled");
-    }
+
+  nextTick(() => {
+    window.addEventListener("scroll", () => {
+      const header = document.querySelector(".header");
+
+      if (header) {
+        if (window.scrollY > 50) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+      }
+    });
   });
 });
 

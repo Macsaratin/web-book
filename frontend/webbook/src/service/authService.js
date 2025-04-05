@@ -26,14 +26,12 @@ export default {
         withCredentials: true
       });
       
-      const { userId, 'jwt-token': token } = response.data;
+      const { 'jwt-token': token } = response.data;
       
   
       // Store token and userId
-      localStorage.setItem('userId', userId);
       localStorage.setItem('jwt-token', token);
-      localStorage.setItem('username', username);
-  
+      localStorage.setItem('email', username);
       // Get user cartId
       const userResponse = await axios.get(`${API_URL}/public/users/email/${username}`, {
         headers: { 'Authorization': `Bearer ${token}` },
@@ -52,6 +50,9 @@ export default {
     localStorage.removeItem('jwt-token');
     localStorage.removeItem('username');
     localStorage.removeItem('cartId');
+    localStorage.removeItem('email');
+    localStorage.removeItem('user');
+
     this.$router.push('/login');
   },
   // Kiểm tra người dùng đã đăng nhập hay chưa

@@ -15,4 +15,5 @@ public class CartDTO {
     private Double totalPrice = 0.0;
     private List<ProductDTO> products = new ArrayList<>();
     private Long userId;
+    private String email;
 }

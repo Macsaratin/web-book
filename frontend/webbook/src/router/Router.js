@@ -34,10 +34,9 @@ const routes = [
     props: true 
   },
   {
-    path: '/cart',
-    name: 'Cart',
+    path: '/users/:email/carts/:cartId',
     component: Cart
-  }
+  }  
 ];
 
 const router = createRouter({

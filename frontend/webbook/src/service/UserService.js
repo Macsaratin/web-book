@@ -13,12 +13,8 @@ export default {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      // Ensure that the response contains the data we expect
-      if (response.data && Array.isArray(response.data.users)) {
-        return response.data.users;  // Return the list of users
-      } else {
-        throw new Error("Dữ liệu người dùng không hợp lệ!");
-      }
+
+        return response.data;
     } catch (error) {
       console.error("Lỗi khi lấy danh sách người dùng:", error.message);
       return [];  // Return an empty array if there's an error

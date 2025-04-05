@@ -48,7 +48,7 @@
                       <i class="fa fa-plus"></i>
                     </button>
                   </div>
-                  <button  @click="addToCart($event.target)" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+                  <button  @click="addToCart()" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
                     <i class="fa fa-shopping-bag me-2 text-primary"></i> Thêm vào giỏ
                   </button>
 
@@ -157,10 +157,10 @@ function decreaseQuantity() {
   if (quantity.value > 1) quantity.value--;
 }
 
-
 async function addToCart() {
   const token = localStorage.getItem('jwt-token');
   const cartId = localStorage.getItem('cartId');
+  const email = localStorage.getItem('email');
 
   if (!token) {
     alert('Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!');
@@ -173,29 +173,36 @@ async function addToCart() {
   }
 
   try {
-    const response = await axios.post(
-      `${API_URL}/public/carts/${cartId}/products/${product.value.productId}/quantity/${quantity.value}`,
-      {},
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+    const { data: cartData } = await axios.get(`${API_URL}/public/carts/${cartId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
       }
-    );
-    alert('Sản phẩm đã được thêm vào giỏ hàng!');
-    router.push('/cart');
-    console.log('Response:', response.data);
+    });
+
+    const existingProduct = cartData.products.find(item => item.productId === product.value.productId);
+
+    if (existingProduct) {
+      alert('Sản phẩm đã có trong giỏ hàng!');
+    } else {
+      const response = await axios.post(
+        `${API_URL}/public/carts/${cartId}/products/${product.value.productId}/quantity/${quantity.value}`,
+        {},
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      alert('Sản phẩm đã được thêm vào giỏ hàng!');
+      router.push(`/users/${email}/carts/${cartId}`);
+      console.log('Response:', response.data);
+    }
   } catch (error) {
     console.error('Lỗi khi thêm sản phẩm vào giỏ hàng:', error);
     alert('Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại!');
   }
 }
-
-
-
-
-
 </script>
 
 <style scoped>

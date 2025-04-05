@@ -17,14 +17,14 @@ export class CartListComponent implements OnInit {
 
   async getAllCarts() {
     try {
-      const response = await this.cartService.getAllCarts(); // Gọi API lấy danh sách giỏ hàng
+      const response = await this.cartService.getAllCarts();
       console.log("Dữ liệu nhận được từ API:", response);
 
       if (!response || !Array.isArray(response)) {
         throw new Error("Dữ liệu API không phải là mảng!");
       }
 
-      this.carts = response; // Gán dữ liệu vào biến carts
+      this.carts = response;
     } catch (error) {
       console.error("Lỗi khi lấy danh sách giỏ hàng:", error);
       this.carts = [];

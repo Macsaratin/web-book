@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
         product.setBookCondition(bookCondition);
         product.setPublisher(publisher);
         product.setCategory(category);
-        product.setPricesale(price - (price * discount / 100)); // Tính giá khuyến mãi
+        product.setPricesale(price - (price * discount / 100));
     
         if (releaseDate != null && !releaseDate.isEmpty()) {
             product.setReleaseDate(LocalDate.parse(releaseDate));
